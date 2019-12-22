@@ -14,8 +14,6 @@ def produce_fuel(reactions, coeff):
 
     state_extra = {}
 
-    reactions_stat = {}
-
     while len(state_in):
         k_i = list(state_in.keys())[0]
         v_i = state_in[k_i]
@@ -28,12 +26,6 @@ def produce_fuel(reactions, coeff):
 
             coeff = 1 if v_j >= v_i else (v_i + v_j - 1) // v_j
             extra_v_i = v_j * coeff - v_i
-
-            if list(left.keys()) == ['ORE']:
-                if k_i not in reactions_stat:
-                    reactions_stat[k_i] = 0
-
-                reactions_stat[k_i] += coeff
 
             for k, v in left.items():
                 if k in state_extra:
