@@ -13,13 +13,13 @@ def valid_field_value(key, value):
     if key == "hgt":
         return len(value) > 2 and (
             ("150" <= value[:-2] <= "193" and value[-2:] == "cm") or
-            ("59" <= value <= "76" and value[-2:] == "in")
+            ("59" <= value[:-2] <= "76" and value[-2:] == "in")
         )
     if key == "hcl":
         color_len = len(
             [x for x in value[1:] if x.isdigit() or 'a' <= x <= 'f']
         )
-        return value[0] == "#" and color_len == 6
+        return len(value) == 7 and value[0] == "#" and color_len == 6
     if key == "ecl":
         return value in {'amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'}
     if key == "pid":
