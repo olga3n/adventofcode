@@ -26,8 +26,6 @@ def ingredients_without_allergens(data):
 
     allergens_count = len({y for x in records for y in x[1]})
 
-    upd = set()
-
     while len(allergens_dict) < allergens_count:
 
         for i in range(len(records)):
@@ -50,8 +48,7 @@ def ingredients_without_allergens(data):
                     ingredients_dict[ingredient] = allergen
                     allergens_dict[allergen] = ingredient
 
-                elif (i, j) not in upd and len(ingredients) and len(allergens):
-                    upd.add((i, j))
+                elif len(ingredients) and len(allergens):
                     records.append((ingredients, allergens))
 
         new_records = []
