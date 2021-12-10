@@ -4,7 +4,7 @@ import sys
 from typing import List, Tuple
 
 
-def basin_size(data: List[List[str]], point: Tuple[int, int]) -> int:
+def basin_size(data: List[str], point: Tuple[int, int]) -> int:
     max_row = len(data)
     max_col = len(data[0])
 
@@ -14,7 +14,7 @@ def basin_size(data: List[List[str]], point: Tuple[int, int]) -> int:
     q = [point]
 
     while len(q):
-        i, j = q.pop(0)
+        i, j = q.pop()
 
         if used[i][j] == 1:
             continue
@@ -34,7 +34,7 @@ def basin_size(data: List[List[str]], point: Tuple[int, int]) -> int:
     return size
 
 
-def risk_level(data: List[List[str]]) -> int:
+def risk_level(data: List[str]) -> int:
     low_points = []
 
     max_row = len(data)

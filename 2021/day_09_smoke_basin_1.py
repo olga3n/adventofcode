@@ -4,7 +4,7 @@ import sys
 from typing import List
 
 
-def risk_level(data: List[List[str]]) -> int:
+def risk_level(data: List[str]) -> int:
     result = 0
 
     max_row = len(data)

@@ -4,7 +4,7 @@ import sys
 from typing import List
 
 
-def most_common(data: List[str], bit_pos: int, default: str = '1'):
+def most_common(data: List[str], bit_pos: int, default: str = '1') -> str:
     cnt = 0
 
     for item in data:
