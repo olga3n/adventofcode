@@ -29,11 +29,6 @@ def polymer_score(data: List[str], steps: int = 40) -> int:
             new_stat[part_2] = new_stat.get(part_2, 0) + stat[p]
 
         stat = new_stat
-        freq: Dict[str, int] = {}
-
-        for p in stat:
-            freq[p[0]] = freq.get(p[0], 0) + stat[p]
-            freq[p[1]] = freq.get(p[1], 0) + stat[p]
 
     freq: Dict[str, int] = {}
 
