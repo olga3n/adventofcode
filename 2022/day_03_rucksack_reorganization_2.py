@@ -12,7 +12,7 @@ def build_groups(
 
     for line in data:
         batch.append(set(line))
-        if len(batch) == 3:
+        if len(batch) == batch_size:
             yield batch
             batch = []
 
