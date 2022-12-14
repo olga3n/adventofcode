@@ -17,9 +17,9 @@ def find_all_pos(data: List[str], element) -> List[Tuple[int, int]]:
     result = []
 
     for row_index, line in enumerate(data):
-        col_index = line.find(element)
-        if col_index >= 0:
-            result.append((row_index, col_index))
+        for col_index, letter in enumerate(line):
+            if letter == element:
+                result.append((row_index, col_index))
 
     return result
 
