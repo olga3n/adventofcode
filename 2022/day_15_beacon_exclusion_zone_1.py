@@ -2,7 +2,27 @@
 
 import sys
 import re
-from typing import Iterable
+from typing import Iterable, List, Tuple
+
+
+def join_intervals(intervals: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
+    joined_intervals = []
+    intervals.sort()
+
+    start, end = intervals[0]
+
+    for i in range(1, len(intervals)):
+        seg_start, seg_end = intervals[i]
+        if end + 1 == seg_start:
+            end = max(end, seg_end)
+        elif max(start, seg_start) <= min(end, seg_end):
+            end = max(end, seg_end)
+        else:
+            joined_intervals.append((start, end))
+            start, end = seg_start, seg_end
+
+    joined_intervals.append((start, end))
+    return joined_intervals
 
 
 def free_positions(data: Iterable[str], row: int = 2000000) -> int:
@@ -26,23 +46,7 @@ def free_positions(data: Iterable[str], row: int = 2000000) -> int:
             min_x, max_x = s_x - dx, s_x + dx
             intervals.append((min_x, max_x))
 
-    joined_intervals = []
-    intervals.sort()
-
-    start, end = intervals[0]
-
-    for i in range(1, len(intervals)):
-        seg_start, seg_end = intervals[i]
-        if end + 1 == seg_start:
-            end = max(end, seg_end)
-        elif max(start, seg_start) <= min(end, seg_end):
-            end = max(end, seg_end)
-        else:
-            joined_intervals.append((start, end))
-            start, end = seg_start, seg_end
-
-    joined_intervals.append((start, end))
-
+    joined_intervals = join_intervals(intervals)
     intervals_size = sum(end - start + 1 for start, end in joined_intervals)
 
     return intervals_size - len(exclude)

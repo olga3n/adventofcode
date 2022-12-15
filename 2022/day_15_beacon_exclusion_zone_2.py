@@ -2,26 +2,39 @@
 
 import sys
 import re
-from typing import Iterable
+from typing import Iterable, List, Tuple
+
+
+def join_intervals(intervals: List[Tuple[int, int]]) -> List[Tuple[int, int]]:
+    joined_intervals = []
+    intervals.sort()
+
+    start, end = intervals[0]
+
+    for i in range(1, len(intervals)):
+        seg_start, seg_end = intervals[i]
+        if end + 1 == seg_start:
+            end = max(end, seg_end)
+        elif max(start, seg_start) <= min(end, seg_end):
+            end = max(end, seg_end)
+        else:
+            joined_intervals.append((start, end))
+            start, end = seg_start, seg_end
+
+    joined_intervals.append((start, end))
+    return joined_intervals
 
 
 def tuning_freq(
     data: Iterable[str], min_coordinate: int = 0, max_coordinate: int = 4000000
 ) -> int:
     coordinates_s = []
-    rows = set()
     pos = (0, 0)
 
     for line in data:
         s_x, s_y, b_x, b_y = map(int, re.findall(r'-?\d+', line))
         dist = abs(s_x - b_x) + abs(s_y - b_y)
         coordinates_s.append((s_x, s_y, dist))
-
-        if 0 <= s_y <= max_coordinate:
-            rows.add(s_y)
-
-        if 0 <= b_y <= max_coordinate:
-            rows.add(s_x)
 
     for row in range(min_coordinate, max_coordinate + 1):
         intervals = []
@@ -33,22 +46,7 @@ def tuning_freq(
                 min_x, max_x = s_x - dx, s_x + dx
                 intervals.append((min_x, max_x))
 
-        joined_intervals = []
-        intervals.sort()
-
-        start, end = intervals[0]
-
-        for i in range(1, len(intervals)):
-            seg_start, seg_end = intervals[i]
-            if end + 1 == seg_start:
-                end = max(end, seg_end)
-            elif max(start, seg_start) <= min(end, seg_end):
-                end = max(end, seg_end)
-            else:
-                joined_intervals.append((start, end))
-                start, end = seg_start, seg_end
-
-        joined_intervals.append((start, end))
+        joined_intervals = join_intervals(intervals)
 
         if len(joined_intervals) == 2:
             if joined_intervals[1][0] - joined_intervals[0][1] == 2:
