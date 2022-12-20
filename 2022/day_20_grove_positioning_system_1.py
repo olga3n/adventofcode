@@ -9,8 +9,6 @@ def mix_process(numbers: List[int]) -> List[int]:
 
     for i in range(len(pairs)):
         value = numbers[i]
-        if value % len(numbers) == 0:
-            continue
         index = pairs.index((i, value))
         rest = pairs[index + 1:] + pairs[:index]
         if value > 0:
