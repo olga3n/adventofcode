@@ -35,24 +35,17 @@ def number_to_snafu(number: int) -> str:
         value = digits.get(degree, 0)
         if 0 <= value <= 2:
             result = str(value) + result
-        elif value == 3:
+            continue
+        if value == 3:
             result = '=' + result
-            if degree + 1 not in digits:
-                digits[degree + 1] = 1
-            else:
-                digits[degree + 1] += 1
         elif value == 4:
             result = '-' + result
-            if degree + 1 not in digits:
-                digits[degree + 1] = 1
-            else:
-                digits[degree + 1] += 1
         elif value >= 5:
-            if degree + 1 not in digits:
-                digits[degree + 1] = 1
-            else:
-                digits[degree + 1] += 1
             result = str(value - 5) + result
+        if degree + 1 not in digits:
+            digits[degree + 1] = 1
+        else:
+            digits[degree + 1] += 1
 
     return result.lstrip('0')
 
