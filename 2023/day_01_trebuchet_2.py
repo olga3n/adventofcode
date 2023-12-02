@@ -64,7 +64,7 @@ def test_sum_calibration_value():
 
 def main():
     stdin = (line.rstrip() for line in sys.stdin)
-    stdin = (line for line in sys.stdin if len(line))
+    stdin = (line for line in stdin if len(line))
     result = sum_calibration_values(stdin)
     print(result)
 
