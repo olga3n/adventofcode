@@ -2,12 +2,13 @@
 
 import sys
 
-from typing import List, Tuple, Set
+from typing import List, Tuple, Set, Iterable
 
 
 def find_paths(
     data: List[str], start: Tuple[int, int], end_set: Set[Tuple[int, int]]
-):
+) -> Iterable[Tuple[Tuple[int, int], int]]:
+
     stack = [(start, 0, 0)]
     visited = set()
 
@@ -19,7 +20,7 @@ def find_paths(
             continue
 
         if pos in end_set and pos != start:
-            yield (pos, path, set(visited))
+            yield (pos, path)
             continue
 
         visited.add(pos)
@@ -70,8 +71,8 @@ def max_path(data: List[str]) -> int:
 
     for start_pos in forks:
         graph[start_pos] = []
-        for end_pos, path, visited in find_paths(data, start_pos, forks):
-            graph[start_pos].append((end_pos, path, visited))
+        for end_pos, path in find_paths(data, start_pos, forks):
+            graph[start_pos].append((end_pos, path))
 
     stack = [(start, 0, 0)]
     visited = set()
@@ -94,7 +95,7 @@ def max_path(data: List[str]) -> int:
         visited.add(pos)
         stack.append((pos, path, 1))
 
-        for end_pos, new_path, _ in graph[pos]:
+        for end_pos, new_path in graph[pos]:
             if end_pos not in visited:
                 stack.append((end_pos, path + new_path, 0))
 
