@@ -15,15 +15,10 @@ def parse_lines(lines: Iterable[str]) -> tuple[list[int], list[int]]:
     return (list_1, list_2)
 
 
-def distance(left: int, right: int) -> int:
-    value = left - right
-    return value if value > 0 else -value
-
-
 def total_distance(list_1: list[int], list_2: list[int]) -> int:
     list_1.sort()
     list_2.sort()
-    return sum(distance(list_1[i], list_2[i]) for i in range(len(list_1)))
+    return sum(abs(list_1[i] - list_2[i]) for i in range(len(list_1)))
 
 
 def test_total_distance():
