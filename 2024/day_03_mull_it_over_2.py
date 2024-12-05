@@ -11,7 +11,9 @@ PATTERN = r'mul\((\d{1,3}),(\d{1,3})\)|(do)\(\)|(don)\'t\(\)'
 def parse_lines(lines: Iterable[str]) -> Iterable[tuple[int, int]]:
     flag = True
     for line in lines:
-        for group in re.findall(PATTERN, line):
+        for matched in re.finditer(PATTERN, line):
+            group = matched.groups()
+
             if group[-1]:
                 flag = False
 

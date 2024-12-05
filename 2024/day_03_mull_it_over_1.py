@@ -9,8 +9,8 @@ MUL_REGEXP = r'mul\((\d{1,3}),(\d{1,3})\)'
 
 
 def parse_line(line: str) -> Iterable[tuple[int, ...]]:
-    for group in re.findall(MUL_REGEXP, line):
-        values = tuple(map(int, group))
+    for matched in re.finditer(MUL_REGEXP, line):
+        values = tuple(map(int, matched.groups()))
         yield values
 
 
