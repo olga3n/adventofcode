@@ -34,12 +34,13 @@ def xmas_count(lines: list[str]) -> int:
             if not (0 <= i1 < len(lines) and 0 <= j1 < len(lines[0])):
                 continue
 
-            if lines[i0][j0] == 'M' and lines[i1][j1] == 'S':
-                cnt += 1
-            elif lines[i0][j0] == 'S' and lines[i1][j1] == 'M':
+            flag_1 = lines[i0][j0] == 'M' and lines[i1][j1] == 'S'
+            flag_2 = lines[i0][j0] == 'S' and lines[i1][j1] == 'M'
+
+            if flag_1 or flag_2:
                 cnt += 1
 
-        if cnt == 2:
+        if cnt == len(DIRS):
             result += 1
 
     return result
