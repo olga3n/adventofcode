@@ -9,11 +9,8 @@ class Position():
     x: int
     y: int
 
-    def add(self, other: 'Position'):
-        return Position(
-            self.x + other.x,
-            self.y + other.y,
-        )
+    def eq_place(self, other) -> bool:
+        return self.x == other.x and self.y == other.y
 
 
 TURN_RULES = {
@@ -31,6 +28,25 @@ DIFF_MAP = {
 }
 
 
+@dataclass(frozen=True)
+class GuardPosition(Position):
+    direction: str
+
+    def next_pos(self) -> 'GuardPosition':
+        return GuardPosition(
+            self.x + DIFF_MAP[self.direction].x,
+            self.y + DIFF_MAP[self.direction].y,
+            self.direction,
+        )
+
+    def turn(self) -> 'GuardPosition':
+        return GuardPosition(
+            self.x,
+            self.y,
+            TURN_RULES[self.direction],
+        )
+
+
 class GuardMap():
 
     def __init__(self, lines):
@@ -40,52 +56,49 @@ class GuardMap():
         self.size_c = len(lines[0])
 
     def is_valid_pos(self, pos: Position) -> bool:
-        if not 0 <= pos.x < self.size_r:
-            return False
+        return (
+            0 <= pos.x < self.size_r and
+            0 <= pos.y < self.size_c
+        )
 
-        if not 0 <= pos.y < self.size_c:
-            return False
-
-        return True
+    def is_wall(self, pos: Position) -> bool:
+        return self.lines[pos.x][pos.y] == '#'
 
     def walk(
         self,
-        guard_direction: str,
-        guard_pos: Position,
+        guard_pos: GuardPosition,
         stop_pos: Position = Position(-1, -1),
-    ) -> tuple[set[Position], bool]:
-        visited: dict[str, set[Position]] = {key: set() for key in DIFF_MAP}
-        is_loop = False
+    ) -> tuple[dict[Position, GuardPosition], bool]:
+
+        guard_visited: set[GuardPosition] = set()
+        pos_visited: dict[Position, GuardPosition] = {}
 
         while True:
-            if guard_pos in visited[guard_direction]:
-                is_loop = True
-                break
-
-            visited[guard_direction].add(guard_pos)
-
-            new_guard_pos = guard_pos.add(DIFF_MAP[guard_direction])
+            new_guard_pos = guard_pos.next_pos()
 
             if not self.is_valid_pos(new_guard_pos):
                 break
 
-            if (self.lines[new_guard_pos.x][new_guard_pos.y] == '#' or
-                    new_guard_pos == stop_pos):
-                guard_direction = TURN_RULES[guard_direction]
+            if self.is_wall(new_guard_pos) or new_guard_pos.eq_place(stop_pos):
+                guard_pos = guard_pos.turn()
                 continue
 
+            if new_guard_pos in guard_visited:
+                return pos_visited, True
+
+            pos = Position(new_guard_pos.x, new_guard_pos.y)
+
+            if pos not in pos_visited:
+                pos_visited[pos] = guard_pos
+
+            guard_visited.add(new_guard_pos)
             guard_pos = new_guard_pos
 
-        visited_set: set[Position] = set()
-
-        for next_set in visited.values():
-            visited_set.update(next_set)
-
-        return visited_set, is_loop
+        return pos_visited, False
 
 
 def guard_stop_pos_cnt(lines: list[str]) -> int:
-    guard_pos = Position(0, 0)
+    guard_pos = GuardPosition(-1, -1, '^')
 
     positions = (
         (i, j)
@@ -95,19 +108,18 @@ def guard_stop_pos_cnt(lines: list[str]) -> int:
 
     for i, j in positions:
         if lines[i][j] == '^':
-            guard_pos = Position(i, j)
+            guard_pos = GuardPosition(i, j, '^')
             break
 
     gm = GuardMap(lines)
-    candidates, _ = gm.walk('^', guard_pos)
+    candidates, _ = gm.walk(guard_pos)
 
     result = 0
 
-    for stop_pos in candidates:
-        if stop_pos == guard_pos:
+    for stop_pos, prev_pos in candidates.items():
+        if stop_pos.eq_place(guard_pos):
             continue
-
-        _, is_loop = gm.walk('^', guard_pos, stop_pos)
+        _, is_loop = gm.walk(prev_pos, stop_pos)
         if is_loop:
             result += 1
 
