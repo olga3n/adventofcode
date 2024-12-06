@@ -47,7 +47,7 @@ def topological_sort(graph: dict[int, set[int]]) -> list[int]:
     result = []
 
     vertex_set = {v for v in graph.keys()}
-    vertex_set.union({v for adj in graph.values() for v in adj})
+    vertex_set.update({v for adj in graph.values() for v in adj})
 
     stack = [(v, 0) for v in vertex_set]
     visited = set()
