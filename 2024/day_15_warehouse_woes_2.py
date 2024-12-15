@@ -80,8 +80,6 @@ def shift_hor(
         lines = [[left, right]]
 
     found_space = False
-
-    curr_pos = pos
     no_space = False
 
     while not no_space:
