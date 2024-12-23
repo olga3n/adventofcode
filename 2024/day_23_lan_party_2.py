@@ -26,10 +26,6 @@ def interconnections(connections: dict[str, set[str]]) -> str:
     candidates = set()
 
     for k1, conn_lst in connections.items():
-
-        if k1[0] != 't':
-            continue
-
         for k2 in conn_lst:
             for k3 in connections[k2]:
                 if k1 in connections[k3]:
