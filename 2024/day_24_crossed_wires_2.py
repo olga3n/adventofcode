@@ -139,8 +139,6 @@ def mixed_deps(deps: dict, functions: dict) -> list[str]:
             result.add(key1)
             result.add(key2)
 
-        mapping_nodes = one_iteration(deps, functions)
-
     return sorted(result)
 
 
