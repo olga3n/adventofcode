@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-from typing import Iterable
+from typing import Iterable, Tuple
 
 
 def parse_lines(lines: Iterable[str]) -> Iterable[int]:
@@ -10,14 +10,13 @@ def parse_lines(lines: Iterable[str]) -> Iterable[int]:
         yield (-value if line.startswith('L') else value)
 
 
-def turns(values: Iterable[int], start=50) -> Iterable[int]:
+def turns(values: Iterable[int], start=50) -> Iterable[Tuple[int, int]]:
     current_angle = start
 
     for value in values:
-        zero_turns = 0
-        if value > 0 or abs(value) >= current_angle:
-            zero_turns = abs(current_angle + value) // 100
-            zero_turns += (value < 0 and current_angle > 0)
+        zero_turns = abs(current_angle + value) // 100
+        if value < 0 and current_angle > 0 and abs(value) >= current_angle:
+            zero_turns += 1
 
         current_angle += value
         current_angle %= 100
@@ -26,7 +25,7 @@ def turns(values: Iterable[int], start=50) -> Iterable[int]:
 
 
 def zero_turns(values: Iterable[int]) -> int:
-    return sum(y for _, y in turns(values))
+    return sum(zero_turns for _, zero_turns in turns(values))
 
 
 def test_zero_turns():
